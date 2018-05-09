@@ -38,9 +38,10 @@ void apush_loop() {
     char *line;
     char **args;
     int status;
-
+    char cwd[1024];
     do {
-        printf("apush>$ ");
+        if (getcwd(cwd, sizeof(cwd)) == NULL) strncpy(cwd, "hello", 1024);
+        printf("apush>$ ", "apush");
         line = apush_read_line();
         args = apush_split_line(line);
         status = apush_execute(args);
@@ -111,8 +112,7 @@ int apush_exit(char **args) {
 
 int apush_execute(char **args) {
     int i;
-
-    if (args[0] == NULL) {
+    if (args[0][0] == '\0') {
         // empty command
         return 1;
     }

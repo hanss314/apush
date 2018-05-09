@@ -51,8 +51,10 @@ char **apush_split_line(char *line) {
             quote=true;
             quotechar = current;
         } else if (strchr(APUSH_TOK_DELIM, current)){
-            tokens[argpos] = token; argpos++;
-            token = malloc(toksize * sizeof(char*)); position = 0;
+            if (token[0] != '\0'){
+                tokens[argpos] = token; argpos++;
+                token = malloc(toksize * sizeof(char*)); position = 0;
+            }
         } else {
             token[position] = current; position++;
         }
