@@ -1,13 +1,13 @@
 CC=gcc
 CFLAGS=
 DEPS =
-OBJ = main.o
+OBJ = main.o parser.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-all: main.o
-	$(CC) -o apush main.o $(CFLAGS)
+all: $(OBJ)
+	$(CC) -o apush $^ $(CFLAGS)
 
 clean: 
 	rm *.o
