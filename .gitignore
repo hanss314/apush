@@ -1,4 +1,8 @@
 *
+
 !*.*
 !*/
+!Makefile
+
+*.o
 *.tar.gz
