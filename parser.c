@@ -15,7 +15,6 @@ char **apush_split_line(char *line) {
     char current;
     bool quote=false, escape=false;
     char quotechar;
-
     for (int i=0; i < strlen(line); i++) {
         current = line[i];
         if (position >= toksize){

@@ -17,14 +17,16 @@ void apush_loop() {
     int status;
     char cwd[1024];
     do {
-        if (getcwd(cwd, sizeof(cwd)) == NULL) strncpy(cwd, "hello", 1024);
-        printf("apush>$ ", "apush");
+        if (getcwd(cwd, sizeof(cwd)) == NULL) strncpy(cwd, "apush", 1024);
+        printf("%s>$ ", cwd);
         line = apush_read_line();
-        args = apush_split_line(line);
-        status = apush_execute(args);
-
-        free(line);
-        free(args);
+        if (strlen(line) > 1){
+            args = apush_split_line(line);
+            status = apush_execute(args);
+            
+            free(line);
+            free(args);
+        } 
     } while(status);
 }
 
