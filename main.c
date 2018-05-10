@@ -4,30 +4,7 @@
 #include <string.h>
 #include <sys/wait.h>
 
-void apush_loop();
-char* apush_read_line();
-char** apush_split_line(char*);
-int apush_execute(char**);
-
-int apush_cd(char **args);
-int apush_help(char **args);
-int apush_exit(char **args);
-
-char *builtin_str[] = {
-    "cd",
-    "help",
-    "exit"
-};
-
-int (*builtin_func[]) (char **) = {
-    &apush_cd,
-    &apush_help,
-    &apush_exit
-};
-
-int apush_num_builtins() {
-    return sizeof(builtin_str) / sizeof(char *);
-}
+#include "main.h"
 
 int main(int argc, char **argv) {
     apush_loop();
@@ -79,35 +56,6 @@ int apush_launch(char **args) {
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
     return 1;
-}
-
-int apush_cd(char **args) {
-    if (args[1] == NULL) {
-        fprintf(stderr, "apush: expected argument to \"cd\"\n");
-    } else {
-        if (chdir(args[1]) != 0) {
-            perror("apush");
-        }
-    }
-    return 1;
-}
-
-int apush_help(char **args) {
-    int i;
-    printf("Alternative Pathetic/Plagiarized Useless Shell\n");
-    printf("Use this like a normal shell\n");
-    printf("Built-in commands:\n");
-
-    for (i = 0; i < apush_num_builtins(); i++) {
-        printf("  %s\n", builtin_str[i]);
-    }
-
-    printf("Use the \"man\" command for information on other programs.\n");
-    return 1;
-}
-
-int apush_exit(char **args) {
-  return 0;
 }
 
 int apush_execute(char **args) {

@@ -1,7 +1,8 @@
 CC=gcc
-CFLAGS=
-DEPS =
-OBJ = main.o parser.o
+CFLAGS=-I.
+DEPS = main.h builtins.h
+OBJ = main.o parser.o builtins.o
+.PHONY: all clean purge
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -11,3 +12,7 @@ all: $(OBJ)
 
 clean: 
 	rm *.o
+
+purge:
+	rm apush
+	make clean
