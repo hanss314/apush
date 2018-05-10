@@ -58,5 +58,6 @@ char **apush_split_line(char *line) {
             token[position] = current; position++;
         }
     }
+    tokens[argpos] = NULL;
     return tokens;
 }
