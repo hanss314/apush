@@ -31,7 +31,7 @@ int apush_cd(char **args) {
 
 int apush_help(char **args) {
     int i;
-    printf("Alternative Pathetic/Plagiarized Useless Shell\n");
+    printf("Alternative Pathetic Useless Shell\n");
     printf("Use this like a normal shell\n");
     printf("Built-in commands:\n");
 
