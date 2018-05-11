@@ -80,8 +80,6 @@ int apush_launch(char ***args){
                 close(1);
                 dup(fd[i][1]);
                 close(fd[i][1]);
-                
-                close(2); 
             }
             if (i > 0){
                 close(0); // Also need to redirect stdin if this is not first process
