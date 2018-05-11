@@ -1,7 +1,7 @@
 void apush_loop();
 char* apush_read_line();
-char** apush_split_line(char*);
-int apush_execute(char**);
+char*** apush_split_line(char*);
+int apush_execute(char***);
 
 int apush_cd(char**);
 int apush_help(char**);

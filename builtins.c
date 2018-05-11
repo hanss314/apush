@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <wait.h>
+
 #include "builtins.h"
 
 char *builtin_str[] = {
@@ -44,5 +46,5 @@ int apush_help(char **args) {
 }
 
 int apush_exit(char **args) {
-  return 0;
+    return 0;
 }

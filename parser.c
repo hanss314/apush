@@ -6,10 +6,15 @@
 #define APUSH_TOK_BUFSIZE 1024
 #define APUSH_SING_TOK_SIZE 256
 #define APUSH_TOK_DELIM " \t\r\n\a"
+#define APUSH_PIPE_CHAR '|'
 #define APUSH_QUOTES "'\""
 
-char **apush_split_line(char *line) {
+#define APUSH_PIPE_MAX 8
+
+char*** apush_split_line(char *line) {
     int bufsize = APUSH_TOK_BUFSIZE, toksize = APUSH_SING_TOK_SIZE, position=0, argpos=0;
+    int pipesize = APUSH_PIPE_MAX, pipepos = 0;
+    char ***pipes = malloc(pipesize * sizeof(char*));
     char **tokens = malloc(bufsize * sizeof(char*));
     char *token = malloc(toksize * sizeof(char*));
     char current;
@@ -29,6 +34,14 @@ char **apush_split_line(char *line) {
             bufsize += APUSH_TOK_BUFSIZE;
             tokens = realloc(tokens, bufsize * sizeof(char*));
             if (!tokens) {
+                fprintf(stderr, "apush: allocation error\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+        if (pipepos >= pipesize){
+            pipesize += APUSH_PIPE_MAX;
+            pipes = realloc(pipes, pipesize * sizeof(char*));
+            if (!pipes) {
                 fprintf(stderr, "apush: allocation error\n");
                 exit(EXIT_FAILURE);
             }
@@ -54,10 +67,16 @@ char **apush_split_line(char *line) {
                 tokens[argpos] = token; argpos++;
                 token = malloc(toksize * sizeof(char*)); position = 0;
             }
+        } else if (current == APUSH_PIPE_CHAR){
+            tokens[argpos] = NULL;
+            
+            pipes[pipepos] = tokens; pipepos++;
+            tokens =  malloc(bufsize * sizeof(char*)); argpos = 0;
         } else {
             token[position] = current; position++;
         }
-    }
-    tokens[argpos] = NULL;
-    return tokens;
+    }    
+    pipes[pipepos] = tokens;
+    pipes[pipepos+1] = NULL;
+    return pipes;
 }
