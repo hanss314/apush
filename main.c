@@ -6,7 +6,22 @@
 
 #include "main.h"
 
+
+void apush_init(){
+    if (access("/etc/apushrc", F_OK) != -1){
+        run_interpreter("/etc/apushrc");
+    }
+    char local_rc[128];
+    strcpy(local_rc, "");
+    strcat(local_rc, getenv("HOME"));
+    strcat(local_rc, "/.apushrc");
+    if (access(local_rc, F_OK) != -1){
+        run_interpreter(local_rc);
+    }    
+}
+
 int main(int argc, char **argv) {
+    apush_init();
     if (argc > 1){
         run_interpreter(argv[1]);
     } else {
