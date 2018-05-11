@@ -4,8 +4,13 @@
 #include <string.h>
 #include <sys/wait.h>
 
-#include "main.h"
+#include "builtins.h"
+#include "interpreter.h"
+#include "parser.h"
 
+void apush_loop();
+char* apush_read_line();
+int apush_execute(char***);
 
 void apush_init(){
     if (access("/etc/apushrc", F_OK) != -1){

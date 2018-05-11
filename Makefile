@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-I.
-DEPS = main.h builtins.h
+DEPS = main.h builtins.h stack.h parser.h interpreter.h
 OBJ = main.o parser.o builtins.o interpreter.o
 .PHONY: all clean purge
 
