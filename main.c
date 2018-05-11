@@ -7,7 +7,11 @@
 #include "main.h"
 
 int main(int argc, char **argv) {
-    apush_loop();
+    if (argc > 1){
+        run_interpreter(argv[1]);
+    } else {
+        apush_loop();
+    }
     return EXIT_SUCCESS;
 }
 

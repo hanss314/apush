@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-I.
 DEPS = main.h builtins.h
-OBJ = main.o parser.o builtins.o
+OBJ = main.o parser.o builtins.o interpreter.o
 .PHONY: all clean purge
 
 %.o: %.c $(DEPS)
