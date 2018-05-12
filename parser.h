@@ -1,2 +1,2 @@
-char*** apush_split_line(char*);
+char*** apush_split_line(char*, int);
 

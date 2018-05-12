@@ -11,7 +11,7 @@
 
 #define APUSH_PIPE_MAX 8
 
-char*** apush_split_line(char *line) {
+char*** apush_split_line(char *line, int split_pipes) {
     int bufsize = APUSH_TOK_BUFSIZE, toksize = APUSH_SING_TOK_SIZE, position=0, argpos=0;
     int pipesize = APUSH_PIPE_MAX, pipepos = 0;
     char ***pipes = malloc(pipesize * sizeof(char*));
@@ -67,7 +67,7 @@ char*** apush_split_line(char *line) {
                 tokens[argpos] = token; argpos++;
                 token = malloc(toksize * sizeof(char*)); position = 0;
             }
-        } else if (current == APUSH_PIPE_CHAR){
+        } else if (split_pipes && current == APUSH_PIPE_CHAR){
             tokens[argpos] = NULL;
             
             pipes[pipepos] = tokens; pipepos++;
