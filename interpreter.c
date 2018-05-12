@@ -46,24 +46,5 @@ struct StackNode* execute_code(char** code){
 int run_interpreter(char* file){
     char** code = read_to_tokens(file);
     struct StackNode* stack = execute_code(code);
-    return 0;
-    /*
-    pid_t pid, wpid;
-    int status;
-    pid = fork();
-    if (pid<0){
-        perror("apush");
-        return -1;
-    } else if(pid == 0){
-        char *args[] = {"python3", file, NULL};
-        if (execvp(args[0], args) == -1){
-            //perror("apush");
-        }
-        exit(EXIT_FAILURE);
-    }
-    do {
-        wpid = waitpid(pid, &status, WUNTRACED);
-    } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    return 1;
-    */
+    return 0; 
 }

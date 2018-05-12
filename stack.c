@@ -50,6 +50,35 @@ int peek(struct StackNode* root)
         return INT_MIN;
     return root->data;
 }
+
+int get_size(struct StackNode* root){
+    int size = -1;
+    struct StackNode* temp = root;
+    while(temp){
+        temp = temp->next;
+        size++;
+    }
+    return size;
+    
+}
+
+struct StackNode* rotate_stack(struct StackNode* root, int count){ 
+    struct StackNode* newroot = root;
+    struct StackNode* prevroot = NULL; 
+    for (int i=0; i<count; i++){
+        prevroot = newroot;
+        newroot = newroot->next;
+    } 
+    if(prevroot != NULL){
+        prevroot->next = NULL;
+    }
+    struct StackNode* oldend = newroot;
+    while (!(oldend->next)){
+        oldend = oldend->next;
+    }
+    oldend->next = root;
+    return newroot;
+}
 /* 
 int main()
 {
