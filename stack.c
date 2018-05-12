@@ -5,10 +5,10 @@
 // A structure to represent a stack
 struct StackNode
 {
-    int data;
-    //char* data_str;
-    //bool is_int = true;
     struct StackNode* next;
+    int data;
+    char* data_str;
+    bool is_int;    
 };
  
 struct StackNode* newNode(int data)
@@ -16,10 +16,21 @@ struct StackNode* newNode(int data)
     struct StackNode* stackNode =
               (struct StackNode*) malloc(sizeof(struct StackNode));
     stackNode->data = data;
+    stackNode->data_str = "";
+    stackNode->is_int = true;
     stackNode->next = NULL;
     return stackNode;
 }
- 
+
+struct StackNode* newStrNode(char* string){
+    struct StackNode* stackNode = (struct StackNode*) malloc(sizeof(struct StackNode));
+    stackNode->data = 0;
+    stackNode->data_str = string;
+    stackNode->is_int = false;
+    stackNode->next = NULL;
+    return stackNode;
+}
+
 int isEmpty(struct StackNode *root)
 {
     return !root;
