@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "parser.h"
+#include "interpreter.h"
 #include "stack.h"
 #include "operations.h"
 

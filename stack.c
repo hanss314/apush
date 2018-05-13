@@ -63,14 +63,13 @@ int peek(struct StackNode* root)
 }
 
 int get_size(struct StackNode* root){
-    int size = -1;
+    int size = 0;
     struct StackNode* temp = root;
     while(temp){
         temp = temp->next;
         size++;
     }
-    return size;
-    
+    return size; 
 }
 
 struct StackNode* rotate_stack(struct StackNode* root, int count){ 
@@ -84,7 +83,7 @@ struct StackNode* rotate_stack(struct StackNode* root, int count){
         prevroot->next = NULL;
     }
     struct StackNode* oldend = newroot;
-    while (!(oldend->next)){
+    while (oldend->next != NULL){
         oldend = oldend->next;
     }
     oldend->next = root;

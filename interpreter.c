@@ -22,8 +22,7 @@ char** read_to_tokens(char* filename){
     return apush_split_line(contents, 0)[0];
 }
 
-struct StackNode* execute_code(char** code){
-    struct StackNode* stack;
+struct StackNode* execute_code(char** code, struct StackNode* stack){
     int p = 0;
     while(1){
         char* instruction = code[p];
@@ -45,6 +44,7 @@ struct StackNode* execute_code(char** code){
 
 int run_interpreter(char* file){
     char** code = read_to_tokens(file);
-    struct StackNode* stack = execute_code(code);
+    struct StackNode* stack = NULL;
+    stack = execute_code(code, stack);
     return 0; 
 }
