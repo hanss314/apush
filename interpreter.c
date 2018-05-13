@@ -46,5 +46,7 @@ int run_interpreter(char* file){
     char** code = read_to_tokens(file);
     struct StackNode* stack = NULL;
     stack = execute_code(code, stack);
+    free(code);
+    free(stack);
     return 0; 
 }

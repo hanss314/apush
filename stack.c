@@ -54,7 +54,17 @@ int pop(struct StackNode** root)
  
     return popped;
 }
- 
+
+char* pop_str(struct StackNode** root){
+    if (isEmpty(*root)) return "";
+    struct StackNode* temp = *root;
+    *root = (*root)->next;
+    char* popped = temp->data_str;
+    free(temp);
+
+    return popped;
+}
+
 int peek(struct StackNode* root)
 {
     if (isEmpty(root))
@@ -69,6 +79,7 @@ int get_size(struct StackNode* root){
         temp = temp->next;
         size++;
     }
+    free(temp);
     return size; 
 }
 
@@ -87,6 +98,9 @@ struct StackNode* rotate_stack(struct StackNode* root, int count){
         oldend = oldend->next;
     }
     oldend->next = root;
+    free(oldend);
+    free(root);
+    free(prevroot);
     return newroot;
 }
 /* 

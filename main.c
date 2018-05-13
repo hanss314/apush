@@ -22,7 +22,7 @@ void apush_init(){
     strcat(local_rc, "/.apushrc");
     if (access(local_rc, F_OK) != -1){
         run_interpreter(local_rc);
-    }    
+    }
 }
 
 int main(int argc, char **argv) {
@@ -109,6 +109,7 @@ int apush_launch(char ***args){
     do {
         wpid = waitpid(pid[i-1], &status, WUNTRACED);
     } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+    free(command);
     return 1;
 }
 
