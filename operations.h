@@ -23,9 +23,13 @@ void apush_ltn(struct StackNode**);
 void apush_geq(struct StackNode**);
 void apush_gtn(struct StackNode**);
 
+void apush_itoc(struct StackNode**);
+
 void apush_rot(struct StackNode**);
 void apush_print_int(struct StackNode**);
 void apush_eval(struct StackNode**);
+void apush_drop(struct StackNode**);
+void apush_dup(struct StackNode**);
 void apush_cond(struct StackNode**);
 void apush_swap(struct StackNode**);
 

@@ -28,9 +28,13 @@ char* op_str[] = {
     "<=",
     "<",
     ">=",
-    ">"
+    ">",
+
+    "chr",
 
     "rot",
+    "drp",
+    "dup",
     "p",
     "eval",
     "if",
@@ -59,8 +63,12 @@ void (*op_func[]) (struct StackNode **) = {
     &apush_ltn,
     &apush_geq,
     &apush_gtn,
+    
+    &apush_itoc,
 
     &apush_rot,
+    &apush_drop,
+    &apush_dup,
     &apush_print_int,
     &apush_eval,
     &apush_cond,
@@ -69,6 +77,13 @@ void (*op_func[]) (struct StackNode **) = {
 
 int apush_num_ops() {
     return sizeof(op_str) / sizeof(char *);
+}
+
+
+//string
+void apush_itoc(struct StackNode** stack){
+    char c[2] = {(char) pop_int(stack), '\0'};
+    push_str(stack, c);
 }
 
 //logical
@@ -169,20 +184,23 @@ void apush_rot(struct StackNode** stack){
 void apush_print_int(struct StackNode** stack){
     printf("%d\n", peek_int(*stack));
 }
-
 void apush_eval(struct StackNode** stack){
     char* text = pop_str(stack);
     char** code = apush_split_line(text, 0)[0];
     execute_code(code, *stack);
 }
-
 void apush_swap(struct StackNode** stack){
     union Data a = pop(stack);
     union Data b = pop(stack);
     push(stack, a);
     push(stack, b);
 }
-
+void apush_drop(struct StackNode** stack){
+    pop(stack);
+}
+void apush_dup(struct StackNode** stack){
+    push(stack, peek(*stack));
+}
 void apush_cond(struct StackNode** stack){
     bool condition;
     if (top_int(*stack)) condition = peek_int(*stack) != 0;
@@ -195,5 +213,5 @@ void apush_cond(struct StackNode** stack){
         pop(stack);
         push(stack, data);
     }
-    //printf("hello %d\n", peek_int(*stack));
 }
+
