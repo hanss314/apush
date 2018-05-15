@@ -49,6 +49,12 @@ void apush_loop() {
             status = apush_execute(args);
             
             free(line);
+            for(int i=0; args[i] != NULL; i++){
+                for(int j=0; args[i][j] != NULL; j++){
+                    free(args[i][j]);
+                }
+                free(args[i]);
+            }
             free(args);
         } 
     } while(status);
