@@ -2,12 +2,17 @@
 #include <limits.h>
 #include <stdbool.h>
 #include "stack.h"
+
+union Data{
+    int i;
+    char* s;
+};
+
 // A structure to represent a stack
 struct StackNode
 {
     struct StackNode* next;
-    int data;
-    char* data_str;
+    union Data data;
     bool is_int;    
 };
  
@@ -15,8 +20,7 @@ struct StackNode* newNode(int data)
 {
     struct StackNode* stackNode =
               (struct StackNode*) malloc(sizeof(struct StackNode));
-    stackNode->data = data;
-    stackNode->data_str = "";
+    stackNode->data.i = data;
     stackNode->is_int = true;
     stackNode->next = NULL;
     return stackNode;
@@ -24,9 +28,7 @@ struct StackNode* newNode(int data)
 
 struct StackNode* newStrNode(char* string){
     struct StackNode* stackNode = (struct StackNode*) malloc(sizeof(struct StackNode));
-    stackNode->data = 0;
-    stackNode->data_str = string;
-    stackNode->is_int = false;
+    stackNode->data.s = string;
     stackNode->next = NULL;
     return stackNode;
 }
@@ -56,7 +58,7 @@ int pop(struct StackNode** root)
         return INT_MIN;
     struct StackNode* temp = *root;
     *root = (*root)->next;
-    int popped = temp->data;
+    int popped = temp->data.i;
     free(temp);
  
     return popped;
@@ -66,7 +68,7 @@ char* pop_str(struct StackNode** root){
     if (isEmpty(*root)) return "";
     struct StackNode* temp = *root;
     *root = (*root)->next;
-    char* popped = temp->data_str;
+    char* popped = temp->data.s;
     free(temp);
 
     return popped;
@@ -76,7 +78,7 @@ int peek(struct StackNode* root)
 {
     if (isEmpty(root))
         return INT_MIN;
-    return root->data;
+    return root->data.i;
 }
 
 int get_size(struct StackNode* root){
