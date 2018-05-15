@@ -6,6 +6,7 @@
 #include "parser.h"
 #include "stack.h"
 #include "operations.h"
+#include "exec.h"
 
 char** read_to_tokens(char* filename){ 
     FILE *fp = fopen(filename, "r");  
@@ -14,7 +15,7 @@ char** read_to_tokens(char* filename){
         exit(1);
     }
     fseek(fp, 0L, SEEK_END);
-    long fsize = ftell(fp);
+    long fsize = ftell(fp); 
     rewind(fp);
     char *contents = (char*) malloc(fsize); 
     fread(contents, fsize, 1, fp);
@@ -38,7 +39,7 @@ struct StackNode* execute_code(char** code, struct StackNode* stack){
             if(instruction[0] == '^' && instruction[1] == '$'){
                 push_str(&stack, instruction + 2);
             } else if (instruction[0] == '>' && instruction[1] == '$'){
-                //TODO: execute instruction
+                apush_execute(apush_split_line(instruction + 2, 1));
             } else {
                 push_int(&stack, atoi(instruction));
             }
