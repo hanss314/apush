@@ -20,8 +20,6 @@ char*** apush_split_line(char *line, int split_pipes) {
     char current;
     bool quote=false, escape=false;
     char quotechar;
-    token[0] = '\0';
-    tokens[0] = NULL;
     for (int i=0; i < strlen(line); i++) {
         current = line[i];
         if (position >= toksize){
@@ -65,9 +63,9 @@ char*** apush_split_line(char *line, int split_pipes) {
             quote=true;
             quotechar = current;
         } else if (strchr(APUSH_TOK_DELIM, current)){
-            if (token[0] != '\0') {
+            if (position != 0) {
+                token[position] = '\0';
                 tokens[argpos] = token; argpos++;
-                tokens[argpos] = NULL;
                 token = malloc(toksize * sizeof(char*));
                 token[0] = '\0';
             }
@@ -75,18 +73,21 @@ char*** apush_split_line(char *line, int split_pipes) {
         } else if (split_pipes && current == APUSH_PIPE_CHAR){
             tokens[argpos] = NULL;
             pipes[pipepos] = tokens; pipepos++;
-            tokens =  malloc(bufsize * sizeof(char*)); argpos = 0;
+            tokens = malloc(bufsize * sizeof(char*)); argpos = 0;
             tokens[0] = NULL;
         } else {
             token[position] = current; position++;
-            token[position] = '\0';
         }
     }
-    if (token[0] != '\0') {
-        tokens[argpos] = token; 
-        tokens[argpos+1] = NULL;
+    if (position != 0) {
+        tokens[argpos] = token; argpos++;
     }
-    pipes[pipepos] = tokens;
-    pipes[pipepos+1] = NULL;
+    tokens[argpos] = NULL;
+    
+    if (argpos != 0) {
+        pipes[pipepos] = tokens; pipepos++;
+    }
+    pipes[pipepos] = NULL;
+    
     return pipes;
 }
