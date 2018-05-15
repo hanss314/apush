@@ -5,8 +5,10 @@ void apush_sub(struct StackNode**);
 void apush_rot(struct StackNode**);
 void apush_print_int(struct StackNode**);
 void apush_eval(struct StackNode**);
-
+void apush_cond(struct StackNode**);
 char* op_str[];
+
 void (*op_func[]) (struct StackNode **);
 
 int apush_num_ops();
+

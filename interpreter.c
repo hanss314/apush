@@ -40,7 +40,7 @@ struct StackNode* execute_code(char** code, struct StackNode* stack){
             } else if (instruction[0] == '>' && instruction[1] == '$'){
                 //TODO: execute instruction
             } else {
-                push(&stack, atoi(instruction));
+                push_int(&stack, atoi(instruction));
             }
         }
         p++;

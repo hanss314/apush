@@ -3,10 +3,6 @@
 #include <stdbool.h>
 #include "stack.h"
 
-union Data{
-    int i;
-    char* s;
-};
 
 // A structure to represent a stack
 struct StackNode
@@ -37,8 +33,15 @@ int isEmpty(struct StackNode *root)
 {
     return !root;
 }
- 
-void push(struct StackNode** root, int data)
+
+void push(struct StackNode** root, union Data data){
+    struct StackNode* stackNode = newNode(data.i);
+    stackNode->data = data;
+    stackNode->next = *root;
+    *root = stackNode;
+}
+
+void push_int(struct StackNode** root, int data)
 {
     struct StackNode* stackNode = newNode(data);
     stackNode->next = *root;
@@ -52,16 +55,24 @@ void push_str(struct StackNode** root, char* data)
     *root = stackNode;
 }
 
-int pop(struct StackNode** root)
-{
-    if (isEmpty(*root))
-        return INT_MIN;
+union Data pop(struct StackNode** root){
+    if (isEmpty(*root)){
+        union Data data;
+        data.i = 0;
+        return data;
+    }
     struct StackNode* temp = *root;
     *root = (*root)->next;
-    int popped = temp->data.i;
+    union Data popped = temp->data;
     free(temp);
  
     return popped;
+
+}
+
+int pop_int(struct StackNode** root)
+{
+    return pop(root).i;
 }
 
 char* pop_str(struct StackNode** root){
@@ -74,11 +85,31 @@ char* pop_str(struct StackNode** root){
     return popped;
 }
 
-int peek(struct StackNode* root)
+union Data peek(struct StackNode* root)
+{
+    if (isEmpty(root)){
+        union Data data;
+        data.i = 0;
+        return data;
+    }
+    return root->data;
+}
+
+int peek_int(struct StackNode* root)
 {
     if (isEmpty(root))
         return INT_MIN;
     return root->data.i;
+}
+
+char* peek_str(struct StackNode* root){
+    if (isEmpty(root)) return "";
+    return root->data.s;
+}
+
+bool top_int(struct StackNode* root){
+    if (isEmpty(root)) return false;
+    return root->is_int;
 }
 
 int get_size(struct StackNode* root){
@@ -112,19 +143,4 @@ struct StackNode* rotate_stack(struct StackNode* root, int count){
     free(prevroot);
     return newroot;
 }
-/* 
-int main()
-{
-    struct StackNode* root = NULL;
- 
-    push(&root, 10);
-    push(&root, 20);
-    push(&root, 30);
- 
-    printf("%d popped from stack\n", pop(&root));
- 
-    printf("Top element is %d\n", peek(root));
- 
-    return 0;
-}
-*/
+
