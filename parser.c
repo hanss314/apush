@@ -75,7 +75,8 @@ char*** apush_split_line(char *line, int split_pipes) {
         } else {
             token[position] = current; position++;
         }
-    }    
+    }
+    if (token[0] != '\0') tokens[argpos] = token; tokens[argpos+1] = NULL;
     pipes[pipepos] = tokens;
     pipes[pipepos+1] = NULL;
     return pipes;

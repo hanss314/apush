@@ -42,7 +42,14 @@ void push(struct StackNode** root, int data)
     stackNode->next = *root;
     *root = stackNode;
 }
- 
+
+void push_str(struct StackNode** root, char* data)
+{
+    struct StackNode* stackNode = newStrNode(data);
+    stackNode->next = *root;
+    *root = stackNode;
+}
+
 int pop(struct StackNode** root)
 {
     if (isEmpty(*root))

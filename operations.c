@@ -10,7 +10,8 @@ char* op_str[] = {
     "+",
     "-",
     "rot",
-    "p"
+    "p",
+    "eval",
 };
 
 void (*op_func[]) (struct StackNode **) = {
@@ -18,6 +19,7 @@ void (*op_func[]) (struct StackNode **) = {
     &apush_sub,
     &apush_rot,
     &apush_print_int,
+    &apush_eval,
 };
 
 int apush_num_ops() {
@@ -44,4 +46,10 @@ void apush_rot(struct StackNode** stack){
 
 void apush_print_int(struct StackNode** stack){
     printf("%d\n", peek(*stack));
+}
+
+void apush_eval(struct StackNode** stack){
+    char* text = pop_str(stack);
+    char** code = apush_split_line(text, 0)[0];
+    execute_code(code, *stack);
 }

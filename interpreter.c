@@ -35,7 +35,13 @@ struct StackNode* execute_code(char** code, struct StackNode* stack){
             }
         }
         if(!instr_found){
-            push(&stack, atoi(instruction));
+            if(instruction[0] == '^' && instruction[1] == '$'){
+                push_str(&stack, instruction + 2);
+            } else if (instruction[0] == '>' && instruction[1] == '$'){
+                //TODO: execute instruction
+            } else {
+                push(&stack, atoi(instruction));
+            }
         }
         p++;
     }
