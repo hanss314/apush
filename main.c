@@ -8,6 +8,8 @@
 #include "interpreter.h"
 #include "parser.h"
 
+#define VERSION "0.0.1"
+
 void apush_loop();
 char* apush_read_line();
 int apush_execute(char***);
@@ -26,10 +28,15 @@ void apush_init(){
 }
 
 int main(int argc, char **argv) {
-    apush_init();
     if (argc > 1){
-        run_interpreter(argv[1]);
-    } else {
+        if(strcmp(argv[1], "--version") == 0){
+            printf("%s\n", VERSION);
+            return EXIT_SUCCESS;
+        } else {
+            run_interpreter(argv[1]);
+        }
+    } else {         
+        apush_init();
         apush_loop();
     }
     return EXIT_SUCCESS;
