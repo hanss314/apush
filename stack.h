@@ -12,7 +12,7 @@ struct StackNode* newNode(int);
 
 int isEmpty(struct StackNode*);
 
-void push(struct StackNode**, union Data);
+void push(struct StackNode**, union Data, bool is_int);
 void push_int(struct StackNode**, int);
 void push_str(struct StackNode**, char*);
 

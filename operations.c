@@ -6,6 +6,7 @@
 #include "interpreter.h"
 #include "stack.h"
 #include "operations.h"
+#include "heap.h"
 
 char* op_str[] = {
     "+",
@@ -31,6 +32,9 @@ char* op_str[] = {
     ">",
 
     "chr",
+
+    "set",
+    "get",
 
     "rot",
     "drp",
@@ -66,6 +70,9 @@ void (*op_func[]) (struct StackNode **) = {
     
     &apush_itoc,
 
+    &apush_set,
+    &apush_get,
+
     &apush_rot,
     &apush_drop,
     &apush_dup,
@@ -79,6 +86,23 @@ int apush_num_ops() {
     return sizeof(op_str) / sizeof(char *);
 }
 
+
+//heap
+void apush_set(struct StackNode** stack){
+    char* name = pop_str(stack);
+    bool is_int = top_int(*stack);
+    union Data data = pop(stack);
+    heap_insert(name, data, is_int);
+}
+
+void apush_get(struct StackNode** stack){
+    char* name = pop_str(stack);
+    struct Heap* item = lookup(name);
+    if (item == NULL) return;
+    union Data data = item->defn;
+    bool is_int = item->is_int;
+    push(stack, data, is_int);
+}
 
 //string
 void apush_itoc(struct StackNode** stack){
@@ -190,16 +214,19 @@ void apush_eval(struct StackNode** stack){
     execute_code(code, *stack);
 }
 void apush_swap(struct StackNode** stack){
+    bool a_int = top_int(*stack);
     union Data a = pop(stack);
+    bool b_int = top_int(*stack);
     union Data b = pop(stack);
-    push(stack, a);
-    push(stack, b);
+    push(stack, a, a_int);
+    push(stack, b, b_int);
 }
 void apush_drop(struct StackNode** stack){
     pop(stack);
 }
 void apush_dup(struct StackNode** stack){
-    push(stack, peek(*stack));
+    bool is_int = top_int(*stack);
+    push(stack, peek(*stack), is_int);
 }
 void apush_cond(struct StackNode** stack){
     bool condition;
@@ -209,9 +236,10 @@ void apush_cond(struct StackNode** stack){
     if (condition){
        pop(stack); 
     } else {
+        bool is_int = top_int(*stack);
         union Data data = pop(stack);
         pop(stack);
-        push(stack, data);
+        push(stack, data, is_int);
     }
 }
 

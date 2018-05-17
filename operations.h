@@ -25,6 +25,9 @@ void apush_gtn(struct StackNode**);
 
 void apush_itoc(struct StackNode**);
 
+void apush_set(struct StackNode**);
+void apush_get(struct StackNode**);
+
 void apush_rot(struct StackNode**);
 void apush_print_int(struct StackNode**);
 void apush_eval(struct StackNode**);

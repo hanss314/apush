@@ -34,10 +34,11 @@ int isEmpty(struct StackNode *root)
     return !root;
 }
 
-void push(struct StackNode** root, union Data data){
+void push(struct StackNode** root, union Data data, bool is_int){
     struct StackNode* stackNode = newNode(data.i);
     stackNode->data = data;
     stackNode->next = *root;
+    stackNode->is_int = is_int;
     *root = stackNode;
 }
 
@@ -45,6 +46,7 @@ void push_int(struct StackNode** root, int data)
 {
     struct StackNode* stackNode = newNode(data);
     stackNode->next = *root;
+    stackNode->is_int = true;
     *root = stackNode;
 }
 
@@ -52,6 +54,7 @@ void push_str(struct StackNode** root, char* data)
 {
     struct StackNode* stackNode = newStrNode(data);
     stackNode->next = *root;
+    stackNode->is_int = false;
     *root = stackNode;
 }
 
