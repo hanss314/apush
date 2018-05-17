@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "parser.h"
 #include "interpreter.h"
@@ -32,6 +33,8 @@ char* op_str[] = {
     ">",
 
     "chr",
+    "++",
+    "ps",
 
     "set",
     "get",
@@ -69,6 +72,8 @@ void (*op_func[]) (struct StackNode **) = {
     &apush_gtn,
     
     &apush_itoc,
+    &apush_strcat,
+    &apush_print_str,
 
     &apush_set,
     &apush_get,
@@ -108,6 +113,17 @@ void apush_get(struct StackNode** stack){
 void apush_itoc(struct StackNode** stack){
     char c[2] = {(char) pop_int(stack), '\0'};
     push_str(stack, c);
+}
+void apush_strcat(struct StackNode** stack){
+    char* end = pop_str(stack);
+    char* start = pop_str(stack);
+    char* new = malloc(strlen(end) + strlen(start)+1);
+    strcpy(new, start);
+    strcat(new, end);
+    push_str(stack, new);
+}
+void apush_print_str(struct StackNode** stack){
+    printf(pop_str(stack));
 }
 
 //logical
