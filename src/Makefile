@@ -16,7 +16,7 @@ $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 all: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o apush $^ $(CFLAGS)
 
 clean: 
 	rm -f $(ODIR)/*.o
