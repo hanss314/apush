@@ -6,7 +6,7 @@ _DEPS = builtins.h exec.h heap.h interpreter.h operations.h parser.h stack.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 ODIR = obj
-_OBJ = main.o parser.o builtins.o interpreter.o stack.o operations.o heap.o
+_OBJ = main.o exec.o parser.o builtins.o interpreter.o stack.o operations.o heap.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 DESTDIR = /usr/local/bin
