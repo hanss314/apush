@@ -2,9 +2,77 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <fcntl.h>
+#include <string.h>
 
 #include "builtins.h"
 
+int exec_command(char** command){
+    int i = 0;
+    while(i++ || 1){
+        if (command[i] == NULL) break;
+        int position = 0;
+        if (command[i][0] == '>'){
+            position = 1;
+        }else if (command[i][1] == '>'){
+            position = 2;
+        }
+        if (position != 0){
+            int fd;
+            int source = STDOUT_FILENO;
+            if (position == 2) source = (int)command[i][0] - 48;
+            if (command[i][position] == '&'){
+                if (command[i][position+1] == '\0'){
+                    fprintf(stderr, "apush: expected number after '&'\n");
+                    exit(EXIT_FAILURE);
+                }
+                fd = (int)command[i][position+1] - 48;
+                free(command[i]);
+                command[i] = NULL;
+            }else{
+                int flags = O_RDWR | O_CREAT;
+                int end = position;
+                char* file;
+                mode_t perms = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+                if (command[i][position] == '>'){
+                    flags |= O_APPEND;
+                    end++;
+                } else {
+                    flags |= O_TRUNC;
+                }
+                if (command[i][end] != '\0'){
+                    file = command[i] + end;
+                } else if (command[i+1] != NULL){
+                    file = command[i+1];
+                    free(command[i]);
+                    command[i] = NULL;
+                    i++;
+                } else if (command[i+1] == NULL){
+                    fprintf(stderr, "apush: expected file to redirect to\n");
+                    exit(EXIT_FAILURE);
+                }
+                if ((fd = open(file, flags, perms)) == -1){
+                    perror("open");
+                    exit(EXIT_FAILURE);
+                }
+                free(command[i]);
+                command[i] = NULL;
+            }
+            //command[i][0] == '&'
+            if (source == -10){
+                dup2(fd, STDOUT_FILENO);
+                dup2(fd, STDERR_FILENO);
+            }else{
+                dup2(fd, source);
+            }
+            if (fd>2) close(fd);
+        }
+    }
+    if (execvp(command[0], command) == -1) {
+        perror("apush");
+    }
+    exit(EXIT_FAILURE);
+}
 int apush_launch(char ***args){
     int status;
     pid_t pid[64], wpid; 
@@ -35,10 +103,7 @@ int apush_launch(char ***args){
                 dup(fd[i-1][0]);
                 close(fd[i-1][0]);
             }            
-            if (execvp(command[0], command) == -1) {
-                perror("apush");
-            }
-            exit(EXIT_FAILURE);
+            exec_command(command); 
         } else if (pid[i] < 0) {
             // Error forking
             perror("apush");
