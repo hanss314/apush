@@ -14,8 +14,29 @@ int exec_command(char** command){
         int position = 0;
         if (command[i][0] == '>'){
             position = 1;
-        }else if (command[i][1] == '>'){
+        } else if (command[i][1] == '>'){
             position = 2;
+        } else if (command[i][0] == '<'){
+            char* file;
+            int fd;
+            if (command[i][position+1] != '\0'){
+                file = command[i] + 1;
+            } else if (command[i+1] != NULL){
+                file = command[i+1];
+                free(command[i]);
+                command[i] = NULL;
+                i++;
+            } else if (command[i+1] == NULL){
+                fprintf(stderr, "apush: expected file to read from\n");
+                exit(EXIT_FAILURE);
+            }
+            if ((fd = open(file, O_RDONLY)) == -1){
+                perror("open");
+                exit(EXIT_FAILURE);
+            }
+            dup2(fd, STDIN_FILENO);
+            close(fd);
+            continue;
         }
         if (position != 0){
             int fd;
@@ -29,7 +50,7 @@ int exec_command(char** command){
                 fd = (int)command[i][position+1] - 48;
                 free(command[i]);
                 command[i] = NULL;
-            }else{
+            } else {
                 int flags = O_RDWR | O_CREAT;
                 int end = position;
                 char* file;

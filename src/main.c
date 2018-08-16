@@ -52,6 +52,7 @@ void apush_loop() {
         printf("%s>$ ", cwd);
         line = apush_read_line();
         if (strlen(line) > 1){
+            if (line[0] == EOF) return;
             args = apush_split_line(line, 1);
             status = apush_execute(args);
             

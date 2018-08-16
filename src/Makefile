@@ -27,4 +27,10 @@ purge:
 
 install:
 	install apush $(DESTDIR)/apush
-	echo "/usr/local/bin/apush" >> /etc/shells
+	@if type chsh >/dev/null 2>&1; then \
+		echo To use fish as your login shell:; \
+		grep -q -- "$(DESTDIR)$(bindir)/apush" /etc/shells || echo -e " * add the line '$(DESTDIR)$(bindir)/apush' to the file '/etc/shells':" \
+		"\n   echo '$(DESTDIR)$(bindir)/apush' | sudo tee -a /etc/shells > /dev/null"; \
+		echo " * run 'chsh -s $(DESTDIR)$(bindir)/apush'"; \
+		echo; \
+	fi;
