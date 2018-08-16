@@ -1,9 +1,11 @@
 *
-cmake-build-debug
 
 !*.*
 !*/
 !Makefile
+
+cmake-build-debug
+.idea
 
 *.o
 *.tar.gz
