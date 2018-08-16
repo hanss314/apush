@@ -75,6 +75,16 @@ char*** apush_split_line(char *line, int split_pipes) {
             pipes[pipepos] = tokens; pipepos++;
             tokens = malloc(bufsize * sizeof(char*)); argpos = 0;
             tokens[0] = NULL;
+        } else if (quote == false &&
+            current==-16 && line[i+1]==-97 &&
+            line[i+2]==-91 && line[i+3]==-106
+        ){
+            // If it's an unquoted baguette emoji replace with slash
+            // and move forwards
+            token[position] = '/'; position++;
+            // null terminator
+            token[position] = '\0';
+            i += 3;
         } else {
             token[position] = current; position++;
         }
