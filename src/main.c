@@ -14,6 +14,12 @@ void apush_loop();
 char* apush_read_line();
 int apush_execute(char***);
 
+char* get_cwd() {
+    static char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) == NULL) strncpy(cwd, "apush", 1024);
+    return cwd;
+}
+
 void apush_init(){
     if (access("/etc/apushrc", F_OK) != -1){
         run_interpreter("/etc/apushrc");
@@ -27,7 +33,14 @@ void apush_init(){
     }
 }
 
+void sigint () {
+    printf("\n");
+    printf("%s>$ ", get_cwd());
+    fflush(stdout);
+}
+
 int main(int argc, char **argv) {
+    signal(SIGINT, &sigint);
     if (argc > 1){
         if(strcmp(argv[1], "--version") == 0){
             printf("%s\n", VERSION);
@@ -45,14 +58,20 @@ int main(int argc, char **argv) {
 void apush_loop() {
     char *line;
     char ***args;
-    int status;
-    char cwd[1024];
+    int status = 1;
+
     do {
-        if (getcwd(cwd, sizeof(cwd)) == NULL) strncpy(cwd, "apush", 1024);
-        printf("%s>$ ", cwd);
+        fflush(stdin);
+        fflush(stdout);
+        fflush(stderr);
+        printf("%s>$ ", get_cwd());
         line = apush_read_line();
         if (strlen(line) > 1){
-            if (line[0] == EOF) return;
+            if (line[0] == -80) {
+                printf("\n");
+                status = 0;
+                return;
+            }
             args = apush_split_line(line, 1);
             status = apush_execute(args);
             
@@ -64,7 +83,7 @@ void apush_loop() {
                 free(args[i]);
             }
             free(args);
-        } 
+        }
     } while(status);
 }
 
