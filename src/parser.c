@@ -90,14 +90,18 @@ char*** apush_split_line(char *line, int split_pipes) {
         }
     }
     if (position != 0) {
+        token[position] = '\0';
         tokens[argpos] = token; argpos++;
+    } else {
+        free(token);
     }
     tokens[argpos] = NULL;
     
     if (argpos != 0) {
         pipes[pipepos] = tokens; pipepos++;
+    } else {
+        free(tokens);
     }
     pipes[pipepos] = NULL;
-    
     return pipes;
 }

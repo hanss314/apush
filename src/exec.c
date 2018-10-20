@@ -155,5 +155,13 @@ int apush_execute(char ***args) {
         }
     }
 
-    return apush_launch(args);
+    int status = apush_launch(args);
+    for(i=0; args[i] != NULL; i++){
+        for(int j=0; args[i][j] != NULL; j++){
+            free(args[i][j]);
+        }
+        free(args[i]);
+    }
+    free(args);
+    return status;
 }

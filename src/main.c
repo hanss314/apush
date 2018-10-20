@@ -7,6 +7,7 @@
 #include "builtins.h"
 #include "interpreter.h"
 #include "parser.h"
+#include "exec.h"
 
 #define VERSION "0.0.1"
 
@@ -51,13 +52,13 @@ int main(int argc, char **argv) {
     } else {         
         apush_init();
         apush_loop();
+        printf("We're done.\n");
     }
     return EXIT_SUCCESS;
 }
 
 void apush_loop() {
     char *line;
-    char ***args;
     int status = 1;
 
     do {
@@ -66,23 +67,14 @@ void apush_loop() {
         fflush(stderr);
         printf("%s>$ ", get_cwd());
         line = apush_read_line();
-        if (strlen(line) > 1){
-            if (line[0] == -80) {
-                printf("\n");
-                status = 0;
-                return;
-            }
-            args = apush_split_line(line, 1);
-            status = apush_execute(args);
-            
+        if (line == NULL) {
+            status = 0;
+            exit(0);
+        }
+        if (strlen(line) > 0){
+            char ***args = apush_split_line(line, 1);
             free(line);
-            for(int i=0; args[i] != NULL; i++){
-                for(int j=0; args[i][j] != NULL; j++){
-                    free(args[i][j]);
-                }
-                free(args[i]);
-            }
-            free(args);
+            status = apush_execute(args);
         }
     } while(status);
 }
@@ -90,6 +82,13 @@ void apush_loop() {
 char *apush_read_line(void) {
     char *line = NULL;
     ssize_t bufsize = 0;
-    getline(&line, &bufsize, stdin);
+    int length = getline(&line, &bufsize, stdin);
+    if (length == -1){
+        free(line);
+        line = NULL;
+    } else {
+        line = realloc(line, length + 1);
+        line[length] = '\0';
+    }
     return line;
 }

@@ -4,20 +4,20 @@
 
 #include "builtins.h"
 
-char *builtin_str[] = {
+const char* builtin_str[NUM_BUILTINS] = {
     "cd",
     "help",
     "exit"
 };
 
-int (*builtin_func[]) (char **) = {
+int (*builtin_func[NUM_BUILTINS]) (char **) = {
     &apush_cd,
     &apush_help,
     &apush_exit
 };
 
 int apush_num_builtins() {
-    return sizeof(builtin_str) / sizeof(char *);
+    return NUM_BUILTINS;
 }
 
 int apush_cd(char **args) {
