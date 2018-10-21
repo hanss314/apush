@@ -41,7 +41,6 @@ void sigint () {
 }
 
 int main(int argc, char **argv) {
-    signal(SIGINT, &sigint);
     if (argc > 1){
         if(strcmp(argv[1], "--version") == 0){
             printf("%s\n", VERSION);
@@ -49,7 +48,8 @@ int main(int argc, char **argv) {
         } else {
             run_interpreter(argv[1]);
         }
-    } else {         
+    } else {
+        signal(SIGINT, &sigint);
         apush_init();
         apush_loop();
         printf("We're done.\n");

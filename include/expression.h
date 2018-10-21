@@ -29,6 +29,7 @@ typedef struct aobject {
 
 AObject createValue(char* value);
 AObject createExp(int length, AObject* nodes);
+AObject dupObj(AObject);
 void deleteExp(SExpression *b);
 void deleteObjs(AObject* objs, int len);
 

@@ -9,3 +9,5 @@ cmake-build-debug
 
 *.o
 *.tar.gz
+
+aur-package

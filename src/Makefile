@@ -1,13 +1,15 @@
 IDIR=../include
 CC=gcc
-CFLAGS=-I$(IDIR) -lasan -fsanitize=address,undefined
+CFLAGS=-I$(IDIR) -lasan -fsanitize=address,undefined -lm
 
 _DEPS = builtins.h exec.h heap.h interpreter.h operations.h parser.h stack.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 ODIR = obj
 _OBJ = main.o exec.o parser.o builtins.o \
-    scripting/interpreter.o scripting/heap.o scripting/interpreter.o scripting/expression.o
+    scripting/interpreter.o scripting/heap.o \
+    scripting/interpreter.o scripting/expression.o \
+    scripting/operations.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 DESTDIR = /usr/local/bin

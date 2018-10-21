@@ -146,6 +146,7 @@ int apush_execute(char ***args) {
     int i;
     if (args[0] == NULL) {
         // empty command
+        free(args);
         return 1;
     }
 

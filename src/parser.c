@@ -68,8 +68,8 @@ char*** apush_split_line(char *line, int split_pipes) {
                 tokens[argpos] = token; argpos++;
                 token = malloc(toksize * sizeof(char*));
                 token[0] = '\0';
+                position = 0;
             }
-            position = 0;
         } else if (split_pipes && current == APUSH_PIPE_CHAR){
             tokens[argpos] = NULL;
             pipes[pipepos] = tokens; pipepos++;

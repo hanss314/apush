@@ -64,3 +64,16 @@ void deleteObjs(AObject* a, int len){
     free(a);
 }
 
+AObject dupObj(AObject a){
+    if (a.is_expr){
+        AObject *nodes = malloc(sizeof(AObject) * a.expr->length);
+        for (int i=0; i<a.expr->length; i++){
+            nodes[i] = dupObj(a.expr->nodes[i]);
+        }
+        return createExp(a.expr->length, nodes);
+
+    } else {
+        return createValue(a.value);
+    }
+}
+

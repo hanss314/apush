@@ -49,6 +49,8 @@ struct Heap* heap_insert(char *name, char* defn)
         hashval = hash(name);
         np->next = hashtab[hashval];
         hashtab[hashval] = np;
+    } else {
+        free(np->defn);
     }
     np->defn = strdup(defn);
     return np;

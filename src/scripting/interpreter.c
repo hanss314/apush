@@ -7,11 +7,11 @@
 #include "expression.h"
 #include "parser.h"
 #include "exec.h"
+#include "operations.h"
+
 
 #define TOK_BUFSIZE 64
 
-char* run_code(AObject*, int);
-char* run_expression(SExpression*);
 
 AObject* lex_code(char* s, int* nodes_len, int* position, long str_len){
     bool quote = false, escape = false;
@@ -99,28 +99,30 @@ AObject* lex_code(char* s, int* nodes_len, int* position, long str_len){
     return nodes;
 }
 
-char* run_expression(SExpression* expr){
-    for (int i=0; i < expr->length; i++){
-        if (expr->nodes[i].is_expr){
-            AObject node = expr->nodes[i];
-            expr->nodes[i] = createValue(run_expression(node.expr));
-            deleteExp(node.expr);
+AObject run_expression(SExpression* expr){
+    char* command;
+    if (expr->nodes[0].is_expr){
+        AObject node = expr->nodes[0];
+        command = run_expression(node.expr).value;
+    } else {
+        command = expr->nodes[0].value;
+    }
+    AObject* cdr = expr->nodes + 1;
+    for (int i = 0; i < NUM_OPS; i++) {
+        if (strcmp(command, op_names[i]) == 0) {
+            AObject ret = (*op_funcs[i])(cdr, expr->length - 1);
+            if (ret.is_expr){
+                return run_expression(ret.expr);
+            } else {
+                return ret;
+            }
         }
     }
-    char* command = expr->nodes[0].value;
-    if (strcmp(command, "code") == 0){
-        run_code(expr->nodes + 1, expr->length - 1);
-    } else if (strcmp(command, "define") == 0){
-        heap_insert(expr->nodes[1].value, expr->nodes[2].value);
-    } else if (strcmp(command, "$") == 0){
-        char *val = lookup(expr->nodes[1].value);
-        return val;
-    }
-    return "";
+    return createValue("");
 }
 
 // Returns null terminated string containing the return value of the last command (hopefully)
-char* run_code(AObject *code, int len){
+AObject run_code(AObject *code, int len){
     for (int i=0; i<len; i++){
         AObject a = code[i];
         if (!a.is_expr){
@@ -145,10 +147,11 @@ char* run_code(AObject *code, int len){
 
             i = j-1;
         } else {
-            run_expression(a.expr);
+            AObject ret = run_expression(a.expr);
+            free(ret.value);
         }
     }
-    return "";
+    return createValue("");
 }
 
 void print(AObject *a, int len){
@@ -173,8 +176,9 @@ void run_interpreter(char* filename){
     fclose(fp);
     int len=0, j=0;
     AObject* a = lex_code(contents, &len, &j, fsize);
-    run_code(a, len);
+    AObject r = run_code(a, len);
     deleteObjs(a, len);
     free(contents);
+    free(r.value);
 }
 
