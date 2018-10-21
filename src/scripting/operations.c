@@ -117,3 +117,92 @@ AObject apush_add(AObject* args, int len) {
     return createValue(str);
 
 }
+
+AObject apush_mul(AObject* args, int len){
+    run_exprs(args, 0, len);
+    int acc = 1;
+    char* endptr;
+    for (int i=0; i<len; i++) {
+        acc *= strtoimax(args[i].value, &endptr, 0);
+    }
+
+    int clen = (int)(ceil(log10((double)abs(acc)))) + 3;
+    if (acc == 0) clen = 2;
+    char str[clen];
+    sprintf(str, "%d", acc);
+    return createValue(str);
+}
+
+AObject apush_div(AObject* args, int len){
+    run_exprs(args, 0, len);
+    char* endptr;
+    int acc = strtoimax(args[0].value, &endptr, 0);
+    for (int i=1; i<len; i++) {
+        acc /= strtoimax(args[i].value, &endptr, 0);
+    }
+
+    int clen = (int)(ceil(log10((double)abs(acc)))) + 3;
+    if (acc == 0) clen = 2;
+    char str[clen];
+    sprintf(str, "%d", acc);
+    return createValue(str);
+}
+
+AObject apush_mod(AObject* args, int len){
+    run_exprs(args, 0, len);
+    char* endptr;
+    int acc = strtoimax(args[0].value, &endptr, 0);
+    for (int i=1; i<len; i++) {
+        acc %= strtoimax(args[i].value, &endptr, 0);
+    }
+
+    int clen = (int)(ceil(log10((double)abs(acc)))) + 3;
+    if (acc == 0) clen = 2;
+    char str[clen];
+    sprintf(str, "%d", acc);
+    return createValue(str);
+}
+
+AObject apush_eq(AObject* args, int len){
+    run_exprs(args, 0, 2);
+    if (strcmp(args[0].value, args[1].value) == 0){
+        return createValue("1");
+    } else {
+        return createValue("0");
+    }
+}
+
+AObject apush_gt(AObject* args, int len){
+    run_exprs(args, 0, 2);
+    if (strcmp(args[0].value, args[1].value) > 0){
+        return createValue("1");
+    } else {
+        return createValue("0");
+    }
+}
+
+AObject apush_lt(AObject* args, int len){
+    run_exprs(args, 0, 2);
+    if (strcmp(args[0].value, args[1].value) < 0){
+        return createValue("1");
+    } else {
+        return createValue("0");
+    }
+}
+
+AObject apush_id(AObject* args, int len){
+    if (args[0].is_expr){
+        return args[0];
+    } else {
+        return createValue(args[0].value);
+    }
+}
+AObject apush_sub(AObject* args, int len){
+    AObject x = dupObj(args[0]), y = dupObj(args[1]),
+            z1 = dupObj(args[2]), z2 = dupObj(args[2]);
+    AObject* l = malloc(2*sizeof(AObject)); l[0] = x; l[1] = z1;
+    AObject* r = malloc(2*sizeof(AObject)); l[0] = y; l[1] = z2;
+    AObject left = createExp(2, l), right = createExp(2, r);
+    AObject* nodes = malloc(2 * sizeof(AObject)); nodes[0] = left; nodes[1] = right;
+    return createExp(2, nodes);
+}

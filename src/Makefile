@@ -7,9 +7,9 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 ODIR = obj
 _OBJ = main.o exec.o parser.o builtins.o \
-    scripting/interpreter.o scripting/heap.o \
-    scripting/interpreter.o scripting/expression.o \
-    scripting/operations.o
+	scripting/interpreter.o scripting/heap.o \
+	scripting/interpreter.o scripting/expression.o \
+	scripting/operations.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 DESTDIR = /usr/local/bin
@@ -22,7 +22,7 @@ all: $(OBJ)
 	$(CC) -o apush $^ $(CFLAGS)
 
 clean:
-	rm -f $(ODIR)/*.o
+	rm -f $(ODIR)/**/*.o $(ODIR)/*.o
 
 purge:
 	rm apush
