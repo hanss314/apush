@@ -26,7 +26,10 @@ purge:
 	rm apush
 	make clean
 
-install:
+apush:
+	make all
+
+install: apush
 	install apush $(DESTDIR)/apush
 	@if type chsh >/dev/null 2>&1; then \
 		echo To use fish as your login shell:; \
