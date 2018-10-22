@@ -43,6 +43,7 @@ AObject apush_def(AObject* args, int len){
 }
 
 AObject apush_ref(AObject* args, int len){
+    run_exprs(args, 0, 1);
     char *val = lookup(args[0].value);
     return createValue(val);
 }
