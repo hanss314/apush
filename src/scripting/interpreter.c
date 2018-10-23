@@ -131,9 +131,14 @@ AObject run_code(AObject *code, int len){
             AObject current;
             do {
                 current = code[j];
+                if (current.is_expr) {
+                    code[j] = run_expression(current.expr);
+                    deleteExp(current.expr);
+                    current = code[j];
+                }
                 size += strlen(current.value) + 1;
                 j++;
-            } while (!current.is_expr && strcmp(current.value, ";") && j<len);
+            } while (strcmp(current.value, ";") && j<len);
             if (j == len) j++;
             char *buffer = malloc(size);
             strcpy(buffer, "");
