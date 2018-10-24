@@ -59,6 +59,7 @@ AObject apush_nop(AObject* args, int len){
 
 AObject apush_if(AObject* args, int len){
     AObject ret;
+    run_exprs(args, 0, 1);
     if (to_bool(args[0].value)){
         ret = args[1];
     } else if (len >= 3) {

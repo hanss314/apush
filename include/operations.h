@@ -21,48 +21,53 @@ AObject apush_lt(AObject*, int);
 AObject apush_id(AObject*, int);
 AObject apush_sub(AObject*, int);
 const char* op_names[NUM_OPS] = {
+    //0
     "shell",
     "define",
-
+    //2
     "$",
     "if",
     "nop",
     "+",
     "while",
-
+    //7
     "*",
     "/",
-    "%"
-
+    "%",
+    //10
     "<",
     ">",
     "=",
-
+    //13
     "id",
+    "sub",
     "nop",
-    "nop",
+    //16
 };
 
 AObject (*op_funcs[NUM_OPS]) (AObject*, int) = {
-        &apush_code,
-        &apush_def,
-
-        &apush_ref,
-        &apush_if,
-        &apush_nop,
-        &apush_add,
-        &apush_while,
-
-        &apush_mul,
-        &apush_div,
-        &apush_mod,
-
-        &apush_gt,
-        &apush_lt,
-        &apush_eq,
-        &apush_id,
-        &apush_sub,
-        &apush_nop,
+    //0
+    &apush_code,
+    &apush_def,
+    //2
+    &apush_ref,
+    &apush_if,
+    &apush_nop,
+    &apush_add,
+    &apush_while,
+    //7
+    &apush_mul,
+    &apush_div,
+    &apush_mod,
+    //10
+    &apush_lt,
+    &apush_gt,
+    &apush_eq,
+    //13
+    &apush_id,
+    &apush_sub,
+    &apush_nop,
+    //16
 };
 
 #endif
