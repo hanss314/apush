@@ -14,7 +14,7 @@
 
 
 AObject* lex_code(char* s, int* nodes_len, int* position, long str_len){
-    bool quote = false, escape = false;
+    bool quote = false, escape = false, comment = false;
     char quotechar = '\0';
     int bufsize = TOK_BUFSIZE, bufpos = 0;
     int nodesize = TOK_BUFSIZE, nodepos = 0;
@@ -22,26 +22,31 @@ AObject* lex_code(char* s, int* nodes_len, int* position, long str_len){
     buffer[0] = '\0';
     AObject* nodes = malloc(bufsize * sizeof(AObject));
     int i;
-    for (i = *position; i<str_len; i++){
+    for (i = *position; i<str_len; i++) {
         char c = s[i];
         if (c == '\0') break;
-        if (bufpos >= bufsize-2){
+        if (bufpos >= bufsize - 2) {
             bufsize += TOK_BUFSIZE;
-            buffer = realloc(buffer, bufsize * sizeof(char*));
+            buffer = realloc(buffer, bufsize * sizeof(char *));
             if (!buffer) {
                 fprintf(stderr, "apush: allocation error\n");
                 exit(EXIT_FAILURE);
             }
         }
-        if (nodepos >= nodesize-2){
+        if (nodepos >= nodesize - 2) {
             nodesize += TOK_BUFSIZE;
-            nodes = realloc(nodes, nodesize * sizeof(char*));
+            nodes = realloc(nodes, nodesize * sizeof(char *));
             if (!nodes) {
                 fprintf(stderr, "apush: allocation error\n");
                 exit(EXIT_FAILURE);
             }
         }
-        if (escape){
+        if (comment) {
+            if (c == '\n'){
+                comment = false;
+            }
+            goto loop_end;
+        } else if (escape){
             buffer[bufpos] = c; bufpos++;
             escape = false;
             goto loop_end;
@@ -74,6 +79,10 @@ AObject* lex_code(char* s, int* nodes_len, int* position, long str_len){
                 break;
 
             case '(':
+                nodes[nodepos] = createValue(buffer); nodepos++;
+                free(buffer);
+                bufpos = 0; bufsize = TOK_BUFSIZE;
+                buffer = malloc(bufsize * sizeof(char));
                 i++;
                 int length = 0;
                 AObject* exp_list = lex_code(s, &length, &i, str_len);
@@ -81,6 +90,8 @@ AObject* lex_code(char* s, int* nodes_len, int* position, long str_len){
                 nodes[nodepos] = child; nodepos++; break;
             case ')':
                 goto lexer_end;
+            case '#':
+                comment = true; break;
 
             default:
                 buffer[bufpos] = c; bufpos++;
