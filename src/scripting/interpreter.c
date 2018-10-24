@@ -134,12 +134,14 @@ void clean_expression(SExpression* expr){
 
 AObject run_expression(SExpression* expr){
     char* command;
-    clean_expression(expr);
     if (expr->nodes[0].is_expr){
         AObject node = expr->nodes[0];
         command = run_expression(node.expr).value;
     } else {
         command = expr->nodes[0].value;
+    }
+    if (strcmp(command, "shell") != 0){
+        clean_expression(expr);
     }
     AObject* cdr = expr->nodes + 1;
     for (int i = 0; i < NUM_OPS; i++) {
