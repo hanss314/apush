@@ -120,6 +120,21 @@ AObject apush_add(AObject* args, int len) {
 
 }
 
+AObject apush_diff(AObject* args, int len){
+    run_exprs(args, 0, len);
+    char* endptr;
+    int acc = strtoimax(args[0].value, &endptr, 0);
+    for (int i=1; i<len; i++) {
+        acc -= strtoimax(args[i].value, &endptr, 0);
+    }
+
+    int clen = (int)(ceil(log10((double)abs(acc)))) + 3;
+    if (acc == 0) clen = 2;
+    char str[clen];
+    sprintf(str, "%d", acc);
+    return createValue(str);
+}
+
 AObject apush_mul(AObject* args, int len){
     run_exprs(args, 0, len);
     int acc = 1;

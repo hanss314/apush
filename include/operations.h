@@ -11,6 +11,7 @@ AObject apush_ref(AObject*, int);
 AObject apush_if(AObject*, int);
 AObject apush_nop(AObject*, int);
 AObject apush_add(AObject*, int);
+AObject apush_diff(AObject*, int);
 AObject apush_mul(AObject*, int);
 AObject apush_while(AObject*, int);
 AObject apush_div(AObject*, int);
@@ -24,24 +25,24 @@ const char* op_names[NUM_OPS] = {
     //0
     "shell",
     "define",
-    //2
     "$",
-    "if",
     "nop",
-    "+",
+    //4
+    "if",
     "while",
-    //7
+    //6
+    "+",
+    "-",
     "*",
     "/",
     "%",
-    //10
+    //11
+    "=",
     "<",
     ">",
-    "=",
-    //13
+    //14
     "id",
     "sub",
-    "nop",
     //16
 };
 
@@ -49,24 +50,24 @@ AObject (*op_funcs[NUM_OPS]) (AObject*, int) = {
     //0
     &apush_code,
     &apush_def,
-    //2
     &apush_ref,
-    &apush_if,
     &apush_nop,
-    &apush_add,
+    //4
+    &apush_if,
     &apush_while,
-    //7
+    //6
+    &apush_add,
+    &apush_diff,
     &apush_mul,
     &apush_div,
     &apush_mod,
-    //10
+    //11
+    &apush_eq,
     &apush_lt,
     &apush_gt,
-    &apush_eq,
-    //13
+    //14
     &apush_id,
     &apush_sub,
-    &apush_nop,
     //16
 };
 
