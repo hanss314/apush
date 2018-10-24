@@ -26,6 +26,14 @@ int to_bool(char* value){
     return 1;
 }
 
+AObject from_bool(int b){
+    if (b){
+        return createValue("1");
+    } else {
+        return createValue("0");
+    }
+}
+
 AObject* run_exprs(AObject* objs, int s, int f){
     for (int i=s; i<f; i++) {
         if (objs[i].is_expr) {
@@ -182,29 +190,17 @@ AObject apush_mod(AObject* args, int len){
 
 AObject apush_eq(AObject* args, int len){
     run_exprs(args, 0, 2);
-    if (strcmp(args[0].value, args[1].value) == 0){
-        return createValue("1");
-    } else {
-        return createValue("0");
-    }
+    return from_bool(strcmp(args[0].value, args[1].value) == 0);
 }
 
 AObject apush_gt(AObject* args, int len){
     run_exprs(args, 0, 2);
-    if (strcmp(args[0].value, args[1].value) > 0){
-        return createValue("1");
-    } else {
-        return createValue("0");
-    }
+    return from_bool(strcmp(args[0].value, args[1].value) > 0);
 }
 
 AObject apush_lt(AObject* args, int len){
     run_exprs(args, 0, 2);
-    if (strcmp(args[0].value, args[1].value) < 0){
-        return createValue("1");
-    } else {
-        return createValue("0");
-    }
+    return from_bool(strcmp(args[0].value, args[1].value) < 0);
 }
 
 AObject apush_id(AObject* args, int len){
@@ -222,4 +218,43 @@ AObject apush_sub(AObject* args, int len){
     AObject left = createExp(2, l), right = createExp(2, r);
     AObject* nodes = malloc(2 * sizeof(AObject)); nodes[0] = left; nodes[1] = right;
     return createExp(2, nodes);
+}
+
+
+
+AObject apush_bool(AObject* args, int len){
+    run_exprs(args, 0, 1);
+    return from_bool(to_bool(args[0].value));
+}
+
+AObject apush_bnot(AObject* args, int len){
+    run_exprs(args, 0, 1);
+    return from_bool(!to_bool(args[0].value));
+}
+
+AObject apush_band(AObject* args, int len){
+    run_exprs(args, 0, len);
+    int acc = 1;
+    for (int i=0; i<len; i++){
+        acc = acc && to_bool(args[i].value);
+    }
+    return from_bool(acc);
+}
+
+AObject apush_bor(AObject* args, int len){
+    run_exprs(args, 0, len);
+    int acc = 0;
+    for (int i=0; i<len; i++){
+        acc = acc || to_bool(args[i].value);
+    }
+    return from_bool(acc);
+}
+
+AObject apush_bxor(AObject* args, int len){
+    run_exprs(args, 0, len);
+    int acc = 0;
+    for (int i=0; i<len; i++){
+        acc = acc ^ to_bool(args[i].value);
+    }
+    return from_bool(acc);
 }

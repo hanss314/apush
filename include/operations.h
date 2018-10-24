@@ -1,6 +1,6 @@
 #include "expression.h"
 #include "interpreter.h"
-#define NUM_OPS 16
+#define NUM_OPS 21
 
 #ifndef APUSH_OPS_H
 #define APUSH_OPS_H
@@ -21,54 +21,73 @@ AObject apush_gt(AObject*, int);
 AObject apush_lt(AObject*, int);
 AObject apush_id(AObject*, int);
 AObject apush_sub(AObject*, int);
+AObject apush_bool(AObject*, int);
+AObject apush_bnot(AObject*, int);
+AObject apush_band(AObject*, int);
+AObject apush_bor(AObject*, int);
+AObject apush_bxor(AObject*, int);
+
 const char* op_names[NUM_OPS] = {
-    //0
+    //0 Basic operations
     "shell",
     "define",
     "$",
     "nop",
-    //4
+    //4 Flow control
     "if",
     "while",
-    //6
+    //6 Arith
     "+",
     "-",
     "*",
     "/",
     "%",
-    //11
+    //11 Comparison
     "=",
     "<",
     ">",
-    //14
+    //14 SKI
     "id",
     "sub",
-    //16
+    //16 Boolean
+    "bool",
+    "!",
+    "&&",
+    "||",
+    "^",
+    //21 END
 };
 
 AObject (*op_funcs[NUM_OPS]) (AObject*, int) = {
-    //0
+    //0 Basic ops
     &apush_code,
     &apush_def,
     &apush_ref,
     &apush_nop,
-    //4
+    //4 Control
     &apush_if,
     &apush_while,
-    //6
+    //6 Arith
     &apush_add,
     &apush_diff,
     &apush_mul,
     &apush_div,
     &apush_mod,
-    //11
+    //11 Comp
     &apush_eq,
     &apush_lt,
     &apush_gt,
-    //14
+    //14 SKI
     &apush_id,
     &apush_sub,
-    //16
+    //16 Boolean
+    &apush_bool,
+    &apush_bnot,
+    &apush_band,
+    &apush_bor,
+    &apush_bxor,
+    //21 END
+
 };
 
 #endif
