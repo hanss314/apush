@@ -68,9 +68,9 @@ AObject* lex_code(char* s, int* nodes_len, int* position, long str_len){
                 free(buffer);
                 bufpos = 0; bufsize = TOK_BUFSIZE;
                 buffer = malloc(bufsize * sizeof(char));
-                if (c == '\n' || c == ';'){
-                    nodes[nodepos] = createValue(";"); nodepos++;
-                }
+                if (c == '\n' || c == ';'){ nodes[nodepos] = createValue(";"); }
+                else { nodes[nodepos] = createValue(" "); }
+                nodepos++;
                 break;
 
             case '(':
@@ -99,8 +99,31 @@ AObject* lex_code(char* s, int* nodes_len, int* position, long str_len){
     return nodes;
 }
 
+void clean_expression(SExpression* expr){
+    AObject* cleaned = malloc(expr->length * sizeof(AObject));
+    int cleaned_length = 0;
+    bool was_space = false;
+    for (int i=0; i<expr->length; i++){
+        AObject curr = expr->nodes[i];
+        if (was_space || curr.is_expr ||
+        (strlen(curr.value) > 0 && strcmp(curr.value, " ") != 0 && strcmp(curr.value, ";") != 0)
+        ){
+            cleaned[cleaned_length] = curr;
+            cleaned_length++;
+            was_space = false;
+        } else{
+            free(curr.value);
+            was_space = true;
+        }
+    }
+    free(expr->nodes);
+    expr->nodes = cleaned;
+    expr->length = cleaned_length;
+}
+
 AObject run_expression(SExpression* expr){
     char* command;
+    clean_expression(expr);
     if (expr->nodes[0].is_expr){
         AObject node = expr->nodes[0];
         command = run_expression(node.expr).value;
@@ -136,7 +159,7 @@ AObject run_code(AObject *code, int len){
                     deleteExp(current.expr);
                     current = code[j];
                 }
-                size += strlen(current.value) + 1;
+                size += strlen(current.value);
                 j++;
             } while (strcmp(current.value, ";") && j<len);
             if (j == len) j++;
@@ -144,7 +167,6 @@ AObject run_code(AObject *code, int len){
             strcpy(buffer, "");
             for (int k=i; k<j-1; k++){
                 strcat(buffer, code[k].value);
-                if (k != j-2) strcat(buffer, " ");
             }
             char ***args = apush_split_line(buffer, 1);
             apush_execute(args);
